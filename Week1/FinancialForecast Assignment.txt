@@ -1,0 +1,84 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class FinancialForecast {
+    private List<Double> revenueHistory;
+
+    public FinancialForecast() {
+        revenueHistory = new ArrayList<>();
+    }
+    public void addMonthlyRevenue(double revenue) {
+        revenueHistory.add(revenue);
+    }
+    public double forecastNextMonth(int months) {
+        if (revenueHistory.size() < months) {
+            throw new IllegalArgumentException("Not enough data for the given moving average window.");
+        }
+
+        double sum = 0.0;
+        int startIndex = revenueHistory.size() - months;
+
+        for (int i = startIndex; i < revenueHistory.size(); i++) {
+            sum += revenueHistory.get(i);
+        }
+
+        return sum / months;
+    }
+
+    public void showRevenueHistory() {
+        System.out.println("Revenue History:");
+        for (int i = 0; i < revenueHistory.size(); i++) {
+            System.out.println("Month " + (i + 1) + ": $" + revenueHistory.get(i));
+        }
+    }
+}
+
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        FinancialForecast forecast = new FinancialForecast();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter number of months of past revenue data: ");
+        int totalMonths = scanner.nextInt();
+        for (int i = 1; i <= totalMonths; i++) {
+            System.out.print("Enter revenue for month " + i + ": $");
+            double revenue = scanner.nextDouble();
+            forecast.addMonthlyRevenue(revenue);
+        }
+        forecast.showRevenueHistory();
+        System.out.print("Enter number of months to use for moving average forecast: ");
+        int averageMonths = scanner.nextInt();
+
+        try {
+            double predicted = forecast.forecastNextMonth(averageMonths);
+            System.out.printf("Forecasted revenue for next month: $%.2f\n", predicted);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+
+OUTPUT:
+Enter number of months of past revenue data: 6
+Enter revenue for month 1: $10000
+Enter revenue for month 2: $20000
+Enter revenue for month 3: $30000
+Enter revenue for month 4: $40000
+Enter revenue for month 5: $50000
+Enter revenue for month 6: $60000
+Revenue History:
+Month 1: $10000.0
+Month 2: $20000.0
+Month 3: $30000.0
+Month 4: $40000.0
+Month 5: $50000.0
+Month 6: $60000.0
+Enter number of months to use for moving average forecast: 4
+Forecasted revenue for next month: $45000.00
+
+
+
