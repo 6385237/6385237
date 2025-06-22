@@ -1,0 +1,97 @@
+public class Product {
+    private int id;
+    private String name;
+    private double price;
+
+    public Product(int id, String name, double price) {
+        this.id = id;
+        this.name = name.toLowerCase();  // case insensitive search
+        this.price = price;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public String toString() {
+        return "Product ID: " + id + ", Name: " + name + ", Price: $" + price;
+    }
+}
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProductSearch {
+    private List<Product> products;
+
+    public ProductSearch() {
+        products = new ArrayList<>();
+    }
+
+    public void addProduct(Product product) {
+        products.add(product);
+    }
+
+    // Search products by keyword (case insensitive partial match)
+    public List<Product> searchByName(String keyword) {
+        List<Product> result = new ArrayList<>();
+        keyword = keyword.toLowerCase();
+
+        for (Product p : products) {
+            if (p.getName().contains(keyword)) {
+                result.add(p);
+            }
+        }
+        return result;
+    }
+}
+
+
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        ProductSearch productSearch = new ProductSearch();
+
+        // Add some products to the platform
+        productSearch.addProduct(new Product(101, "Apple iPhone 13", 999.99));
+        productSearch.addProduct(new Product(102, "Samsung Galaxy S21", 799.99));
+        productSearch.addProduct(new Product(103, "Apple MacBook Pro", 1299.99));
+        productSearch.addProduct(new Product(104, "Dell XPS 13", 999.99));
+        productSearch.addProduct(new Product(105, "Apple AirPods Pro", 249.99));
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter product name keyword to search:");
+        String keyword = scanner.nextLine();
+
+        List<Product> foundProducts = productSearch.searchByName(keyword);
+
+        if (foundProducts.isEmpty()) {
+            System.out.println("No products found matching '" + keyword + "'");
+        } else {
+            System.out.println("Products found:");
+            for (Product p : foundProducts) {
+                System.out.println(p);
+            }
+        }
+
+        scanner.close();
+    }
+}
+
+
+OUTPUT:
+Enter product name keyword to search:
+Phone
+Products found:
+Product ID: 101, Name: apple iphone 13, Price: $999.99
